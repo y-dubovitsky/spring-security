@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 // Как я понял, эта аннотация указывается везде,
@@ -31,23 +32,14 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable() // FIXME!
+                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .and()
                 .authorizeRequests()
-                .antMatchers("index", "/", "/css/*", "/js/*")
-                    .permitAll()
-                .antMatchers("/api/**")
-                    .hasRole(AppUserRole.USER.name())
-//                .antMatchers(HttpMethod.DELETE,"/management/api/**")
-//                    .hasAuthority(AppUserPermission.COURSE_WRITE.getPermission())
-//                .antMatchers(HttpMethod.PUT,"/management/api/**")
-//                    .hasAuthority(AppUserPermission.COURSE_WRITE.getPermission())
-//                .antMatchers(HttpMethod.POST,"/management/api/**")
-//                    .hasAuthority(AppUserPermission.COURSE_WRITE.getPermission())
-//                .antMatchers(HttpMethod.GET,"/management/api/**")
-//                    .hasAnyRole(AppUserRole.ADMIN.name(), AppUserRole.TRAINEE_ADMIN.name())
+                .antMatchers("index", "/", "/css/*", "/js/*").permitAll()
+                .antMatchers("/api/**").hasRole(AppUserRole.USER.name())
                 .anyRequest()
                 .authenticated()
-                .and()
+                    .and()
                 .httpBasic();
     }
 

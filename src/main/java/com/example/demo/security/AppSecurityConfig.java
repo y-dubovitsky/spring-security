@@ -42,7 +42,9 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                     .and()
                 .formLogin()
                     .loginPage("/login").permitAll()
-                    .defaultSuccessUrl("/management/api/v1/studens", true);
+                    .defaultSuccessUrl("/management/api/v1/studens", true)
+                        .and()
+                    .rememberMe();
     }
 
     @Override

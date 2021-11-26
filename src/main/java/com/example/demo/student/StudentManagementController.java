@@ -23,6 +23,12 @@ public class StudentManagementController {
         return STUDENTS;
     }
 
+    @GetMapping("/tr")
+    @PreAuthorize("hasRole('ROLE_TRAINEE_ADMIN')")
+    public ResponseEntity<String> getOne() {
+        return ResponseEntity.ok("TRAINEE_ADMIN");
+    }
+
     @PostMapping
     @PreAuthorize("hasAnyAuthority('student:write')")
     public ResponseEntity<String> addStudent(@RequestBody Student student) {

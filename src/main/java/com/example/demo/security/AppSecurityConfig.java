@@ -32,15 +32,17 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .and()
+//                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("index", "/", "/css/*", "/js/*").permitAll()
                 .antMatchers("/api/**").hasRole(AppUserRole.USER.name())
                 .anyRequest()
                 .authenticated()
                     .and()
-                .httpBasic();
+                .formLogin()
+                    .loginPage("/login").permitAll()
+                    .defaultSuccessUrl("/management/api/v1/studens", true);
     }
 
     @Override

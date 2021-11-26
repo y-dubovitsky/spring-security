@@ -1,6 +1,7 @@
 package com.example.demo.student;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -17,16 +18,19 @@ public class StudentManagementController {
     );
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     public List<Student> getAllStudents() {
         return STUDENTS;
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('student:write')")
     public ResponseEntity<String> addStudent(@RequestBody Student student) {
         return ResponseEntity.ok("Added student: " + student);
     }
 
     @DeleteMapping(path = "{id}")
+    @PreAuthorize("hasAnyAuthority('student:read', 'student:write', 'course:read', 'course:write')")
     public ResponseEntity<String> deleteStudent(@PathVariable("id") Integer id) {
         return ResponseEntity.ok("Student deleted: " + STUDENTS.stream()
                 .filter(student -> student.getStudentId() == id)

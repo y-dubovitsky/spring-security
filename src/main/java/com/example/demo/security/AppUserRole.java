@@ -31,12 +31,12 @@ public enum AppUserRole {
         return permissions;
     }
 
-    public Set<GrantedAuthority> grantedAuthoritySet() {
-        Set<GrantedAuthority> grantedAuthorities = this.permissions.stream()
+    public Set<SimpleGrantedAuthority> getGrantedAuthorities() {
+        Set<SimpleGrantedAuthority> permissions = getPermissions().stream()
                 .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
                 .collect(Collectors.toSet());
-        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
 
-        return grantedAuthorities;
+        permissions.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
+        return permissions;
     }
 }
